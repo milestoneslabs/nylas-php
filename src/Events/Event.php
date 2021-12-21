@@ -164,7 +164,7 @@ class Event
             ->setQuery($query)
             ->setFormParams($params)
             ->setHeaderParams($header)
-            ->post(API::LIST['oneEvent']);
+            ->post(API::LIST['RSVPing']);
     }
 
     // ------------------------------------------------------------------------------
