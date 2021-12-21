@@ -1,13 +1,7 @@
 {
-    "name": "lanlin/nylas-php",
+    "name": "milestoneslabs/nylas-php",
     "description": "Nylas PHP SDK (api version 2.2)",
     "license": "MIT",
-    "authors" : [
-        {
-          "name": "lanlin",
-          "email": "lanlin1987@gmail.com"
-        }
-    ],
     "require": {
         "php": ">=8.0",
         "ext-json": "*",
