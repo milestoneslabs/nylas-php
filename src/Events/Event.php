@@ -293,7 +293,7 @@ class Event
         return V::keySet(
             V::key('id', V::stringType()->notEmpty()),
             V::keyOptional('when', $this->timeRules()),
-            ...$this->getEventBaseRules(),
+            ...$this->getEventBaseRules(true),
         );
     }
 
@@ -330,10 +330,10 @@ class Event
 
     /**
      * get event base rules
-     *
+     * @param bool $isUpdate
      * @return array
      */
-    private function getEventBaseRules(): array
+    private function getEventBaseRules(bool $isUpdate = false): array
     {
         $recurrenceRule = V::keySet(
             V::key('rrule', V::simpleArray()),
@@ -349,7 +349,7 @@ class Event
 
         return
         [
-            V::key('calendar_id', V::stringType()->notEmpty()),
+            ...($isUpdate ? [] : [V::key('calendar_id', V::stringType()->notEmpty())]),
             V::keyOptional('busy', V::boolType()),
             V::keyOptional('read_only', V::boolType()),
             V::keyOptional('title', V::stringType()->notEmpty()),
