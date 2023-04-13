@@ -136,6 +136,16 @@ class Sending
             V::keyOptional('payload', V::stringType()->notEmpty())
         );
 
+        $metadata = V::keySet(
+            V::keyOptional('agent', V::nullable(V::stringType())),
+            V::keyOptional('campaign', V::nullable(V::stringType())),
+            V::keyOptional('hub', V::nullable(V::stringType())),
+            V::keyOptional('landingPage', V::nullable(V::stringType())),
+            V::keyOptional('organization', V::nullable(V::stringType())),
+            V::keyOptional('templateId', V::nullable(V::stringType())),
+            V::keyOptional('userInvitation', V::nullable(V::stringType())),
+        );
+
         return V::simpleArray(V::keySet(
             V::keyOptional('to', $tmp),
             V::keyOptional('cc', $tmp),
@@ -146,7 +156,8 @@ class Sending
             V::keyOptional('body', V::stringType()->notEmpty()),
             V::keyOptional('subject', V::stringType()->notEmpty()),
             V::keyOptional('file_ids', $ids),
-            V::keyOptional('tracking', $tracking)
+            V::keyOptional('tracking', $tracking),
+            V::keyOptional('metadata', $metadata),
         ));
     }
 
