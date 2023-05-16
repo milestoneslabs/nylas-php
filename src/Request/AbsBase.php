@@ -1,6 +1,7 @@
 <?php namespace Nylas\Request;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Nylas\Utilities\API;
 use Nylas\Utilities\Helper;
 use Nylas\Utilities\Errors;
@@ -252,6 +253,9 @@ trait AbsBase
         return static function (ResponseInterface $response) use ($request, $excpArr)
         {
             $statusCode = $response->getStatusCode();
+            Log::channel('nylas.contacts')->error(__METHOD__  . ' failed request', [
+                'status_code' => $response->getStatusCode(),
+            ]);
 
             // check status code
             if ($statusCode >= 400)
