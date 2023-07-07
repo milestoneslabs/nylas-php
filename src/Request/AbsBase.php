@@ -1,6 +1,7 @@
 <?php namespace Nylas\Request;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Illuminate\Support\Facades\Log;
 use Nylas\Utilities\API;
 use Nylas\Utilities\Helper;
@@ -224,11 +225,24 @@ trait AbsBase
     private function concatOptions(bool $httpErrors = false) : array
     {
         $temp =
-        [
-            'debug'       => $this->debug,
-            'on_headers'  => $this->onHeadersFunctions(),
-            'http_errors' => $httpErrors
-        ];
+            [
+                'debug'       => $this->debug,
+                'on_headers'  => $this->onHeadersFunctions(),
+                'on_stats' => static function (TransferStats $stats) {
+                    $url = $stats->getEffectiveUri()->__toString();
+                    $statusCode = $stats->getResponse()->getStatusCode();
+
+                    if (
+                        strpos($url, 'contact') !== false &&
+                        $statusCode >= 400
+                    ) {
+                        Log::channel('nylas.contacts')->error(__METHOD__  . ' haha', [
+                            'status_code' => $statusCode,
+                        ]);
+                    }
+                },
+                'http_errors' => $httpErrors
+            ];
 
         return array_merge(
             $temp,
@@ -253,10 +267,6 @@ trait AbsBase
         return static function (ResponseInterface $response) use ($request, $excpArr)
         {
             $statusCode = $response->getStatusCode();
-            Log::channel('nylas.contacts')->error(__METHOD__  . ' failed request', [
-                'status_code' => $response->getStatusCode(),
-            ]);
-
             // check status code
             if ($statusCode >= 400)
             {
